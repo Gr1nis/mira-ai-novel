@@ -66,7 +66,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
     portraitImg.classList.add("fade-out");
     setTimeout(() => {
-      portraitImg.src = `assets/sprites/${validEmotion}.svg`;
+      portraitImg.src = `assets/sprites/${validEmotion}.jpg`;
+      portraitImg.onerror = () => {
+        portraitImg.src = `assets/sprites/${validEmotion}.svg`;
+      };
       portraitImg.onload = () => {
         portraitImg.classList.remove("fade-out");
         portraitImg.classList.add("fade-in");

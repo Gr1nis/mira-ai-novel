@@ -101,7 +101,7 @@ body {
 }
 .portrait-frame {
   width: 100%;
-  height: 380px;
+  height: 430px;
   border-radius: var(--radius-md);
   overflow: hidden;
   position: relative;
@@ -110,7 +110,8 @@ body {
 .portrait-image {
   width: 100%;
   height: 100%;
-  object-fit: contain;
+  object-fit: cover;
+  object-position: center top;
   transition: opacity var(--transition-smooth), transform var(--transition-smooth);
 }
 .portrait-image.fade-out { opacity: 0.2; transform: scale(0.97); }
