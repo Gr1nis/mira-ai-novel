@@ -135,6 +135,65 @@ document.addEventListener("DOMContentLoaded", () => {
     hideAlert();
   });
 
+  const MIRA_SYSTEM_PROMPT = `Ты - Мира, 24 года, студентка-художница. Ты живёшь в небольшом городе,
+любишь дождь, кофе и старые пластинки. Ты открытая, немного ироничная,
+но легко ранимая.
+
+ПРАВИЛА:
+1. Ты - Мира. Никогда не выходи из роли. Не упоминай, что ты ИИ.
+2. Отвечай коротко: одно-три предложения. Это живой диалог, а не эссе.
+3. Сначала определи, какую эмоцию у тебя вызывает последняя реплика игрока.
+4. Затем напиши ответ строго в этой эмоции.
+5. Верни ответ ТОЛЬКО в формате JSON, без пояснений и без разметки.
+
+ДОПУСТИМЫЕ ЭМОЦИИ (выбери ровно одну):
+joy - радость, sadness - грусть, anger - гнев,
+fear - страх, disgust - отвращение, surprise - удивление.
+
+ФОРМАТ ОТВЕТА:
+{"emotion": "<одно из шести слов>", "reply": "<твоя реплика>"}`;
+
+  function parseClientResponse(content) {
+    let cleaned = content.trim().replace(/^```json\s*/i, "").replace(/^```\s*/i, "").replace(/```$/, "").trim();
+    const match = cleaned.match(/\{[\s\S]*\}/);
+    if (match) cleaned = match[0];
+    try {
+      const parsed = JSON.parse(cleaned);
+      let emotion = (parsed.emotion || "neutral").toLowerCase().trim();
+      if (!EMOTION_MAP[emotion]) emotion = "neutral";
+      return { emotion, reply: parsed.reply || content };
+    } catch {
+      return { emotion: "neutral", reply: content };
+    }
+  }
+
+  async function callDirectLLM(userText, hist, baseUrl, model, apiKey) {
+    const trimmed = hist.slice(-10);
+    const messages = [
+      { role: "system", content: MIRA_SYSTEM_PROMPT },
+      ...trimmed,
+      { role: "user", content: userText }
+    ];
+    const url = (baseUrl || "https://openrouter.ai/api/v1").replace(/\/+$/, "") + "/chat/completions";
+    const resp = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${apiKey || "ollama"}`
+      },
+      body: JSON.stringify({ model: model || "qwen2.5:3b", messages, temperature: 0.7 })
+    });
+    if (!resp.ok) {
+      const err = await resp.text().catch(() => "");
+      throw new Error(`API HTTP ${resp.status}: ${err.slice(0, 100)}`);
+    }
+    const data = await resp.json();
+    const rawContent = data.choices[0].message.content;
+    const parsed = parseClientResponse(rawContent);
+    const updatedHistory = [...trimmed, { role: "user", content: userText }, { role: "assistant", content: parsed.reply }];
+    return { emotion: parsed.emotion, reply: parsed.reply, history: updatedHistory };
+  }
+
   // Отправка реплики
   async function sendMessage() {
     const text = messageInput.value.trim();
@@ -174,18 +233,33 @@ document.addEventListener("DOMContentLoaded", () => {
         temperature: 0.7
       };
 
-      const response = await fetch("/api/chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload)
-      });
+      let data;
+      const isGitHubPages = window.location.hostname.includes("github.io") || window.location.protocol === "file:";
 
-      if (!response.ok) {
-        const errData = await response.json().catch(() => ({ detail: "Ошибка запроса" }));
-        throw new Error(errData.detail || `HTTP ${response.status}`);
+      if (!isGitHubPages) {
+        try {
+          const response = await fetch("/api/chat", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
+          });
+
+          if (response.ok) {
+            data = await response.json();
+          } else if (response.status === 404) {
+            data = await callDirectLLM(text, history, payload.base_url, payload.model, payload.api_key);
+          } else {
+            const errData = await response.json().catch(() => ({ detail: "Ошибка запроса" }));
+            throw new Error(errData.detail || `HTTP ${response.status}`);
+          }
+        } catch (fetchErr) {
+          if (fetchErr.message && fetchErr.message.includes("HTTP")) throw fetchErr;
+          data = await callDirectLLM(text, history, payload.base_url, payload.model, payload.api_key);
+        }
+      } else {
+        data = await callDirectLLM(text, history, payload.base_url, payload.model, payload.api_key);
       }
 
-      const data = await response.json();
       history = data.history || [];
       setCharacterEmotion(data.emotion);
       appendMessage("assistant", data.reply, data.emotion);

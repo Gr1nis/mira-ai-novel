@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 550" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4a3b2c" />
+      <stop offset="100%" stop-color="#1c1917" />
+    </linearGradient>
+    <linearGradient id="skinGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#fff0eb" />
+      <stop offset="100%" stop-color="#fddfd5" />
+    </linearGradient>
+    <linearGradient id="hairGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#6b3a2a" />
+      <stop offset="100%" stop-color="#442217" />
+    </linearGradient>
+    <linearGradient id="coatGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#4a5568" />
+      <stop offset="100%" stop-color="#2d3748" />
+    </linearGradient>
+  </defs>
+
+  <rect width="400" height="550" rx="20" fill="url(#bgGrad)"/>
+  <circle cx="200" cy="220" r="160" fill="#f6ad55" opacity="0.18" />
+
+  <!-- Back Hair -->
+  <path d="M 120,200 C 110,340 130,420 160,450 C 170,450 230,450 240,450 C 270,420 290,340 280,200 Z" fill="url(#hairGrad)" />
+
+  <!-- Body / Coat & Scarf -->
+  <path d="M 100,550 L 120,440 C 140,410 170,390 200,390 C 230,390 260,410 280,440 L 300,550 Z" fill="url(#coatGrad)" />
+  <path d="M 155,385 C 180,405 220,405 245,385 C 255,420 250,470 230,480 C 205,490 195,490 170,480 C 150,470 145,420 155,385 Z" fill="#2c7a7b" />
+  <path d="M 185,410 L 175,510 L 210,510 L 215,410 Z" fill="#319795" opacity="0.9"/>
+
+  <!-- Neck -->
+  <path d="M 175,340 L 175,400 C 185,408 215,408 225,400 L 225,340 Z" fill="#fcd2c2" />
+
+  <!-- Head / Face -->
+  <path d="M 140,210 C 140,310 165,360 200,360 C 235,360 260,310 260,210 C 260,140 235,110 200,110 C 165,110 140,140 140,210 Z" fill="url(#skinGrad)" />
+
+  <!-- Artist Beret tilted perkily -->
+  <ellipse cx="190" cy="115" rx="90" ry="40" fill="#2d3748" transform="rotate(-6 190 115)"/>
+  <circle cx="170" cy="80" r="5" fill="#f6ad55"/>
+
+  <!-- Front Hair -->
+  <path d="M 135,190 C 145,130 170,110 200,110 C 235,110 260,135 265,190 C 255,200 245,215 240,260 C 235,210 220,175 200,180 C 185,175 165,200 160,260 C 155,215 145,200 135,190 Z" fill="url(#hairGrad)" />
+
+  <!-- Joy Face: Arched eyebrows, happy smiling eyes, warm wide smile -->
+  <path d="M 160,210 Q 175,200 190,208" stroke="#3b1e15" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <path d="M 210,208 Q 225,200 240,210" stroke="#3b1e15" stroke-width="3" fill="none" stroke-linecap="round"/>
+
+  <!-- Happy eyes (Curved crescent anime smile) -->
+  <path d="M 165,237 Q 175,225 185,237" stroke="#2d3748" stroke-width="4" fill="none" stroke-linecap="round"/>
+  <path d="M 215,237 Q 225,225 235,237" stroke="#2d3748" stroke-width="4" fill="none" stroke-linecap="round"/>
+  <circle cx="175" cy="242" r="2.5" fill="#f6ad55" opacity="0.8" />
+  <circle cx="225" cy="242" r="2.5" fill="#f6ad55" opacity="0.8" />
+
+  <path d="M 200,255 L 198,262 L 202,263" stroke="#e29578" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+
+  <!-- Open radiant smile -->
+  <path d="M 190,283 Q 200,305 210,283 Z" fill="#c53030" stroke="#9b2c2c" stroke-width="1.5" />
+  <path d="M 193,286 Q 200,292 207,286" stroke="#ffffff" stroke-width="2" fill="none" stroke-linecap="round"/>
+
+  <!-- Bright blush -->
+  <ellipse cx="158" cy="253" rx="12" ry="6" fill="#f56565" opacity="0.55" />
+  <ellipse cx="242" cy="253" rx="12" ry="6" fill="#f56565" opacity="0.55" />
+
+  <!-- State Badge -->
+  <rect x="20" y="20" width="100" height="32" rx="16" fill="rgba(0,0,0,0.5)" stroke="#ecc94b" stroke-width="1.5"/>
+  <circle cx="36" cy="36" r="6" fill="#f6e05e" />
+  <text x="52" y="41" fill="#fefcbf" font-family="sans-serif" font-size="13" font-weight="700">JOY</text>
+</svg>
