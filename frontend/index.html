@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Визуальная новелла «Мира» — Эмоциональный ИИ</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Верхняя панель управления -->
+    <header class="app-header">
+      <div class="header-brand">
+        <span class="novel-title">Визуальная Новелла «Мира»</span>
+        <span class="novel-subtitle">Эмоциональный ИИ-персонаж (Ekman Model)</span>
+      </div>
+      <div class="header-actions">
+        <button id="btnSettings" class="btn btn-secondary" title="Настройки API">
+          <span class="icon">⚙️</span> Настройки
+        </button>
+        <button id="btnResetHistory" class="btn btn-secondary" title="Очистить историю диалога">
+          <span class="icon">🔄</span> Новая беседа
+        </button>
+      </div>
+    </header>
+
+    <!-- Основная рабочая область: Слева персонаж, Справа чат -->
+    <main class="novel-stage">
+      <!-- ЛЕВАЯ ЗОНА: Портрет персонажа и эмоциональное состояние -->
+      <section class="character-pane">
+        <div class="portrait-card">
+          <div class="portrait-frame">
+            <img id="characterPortrait" src="assets/sprites/neutral.svg" alt="Мира" class="portrait-image">
+            <div id="portraitGazeOverlay" class="portrait-overlay"></div>
+          </div>
+          <div class="character-identity">
+            <div class="character-name-row">
+              <h2 class="character-name">Мира</h2>
+              <span class="character-age">24 года</span>
+            </div>
+            <p class="character-bio">Студентка-художница. Любит дождь, кофе и старые пластинки.</p>
+            <div class="emotion-status-bar">
+              <span class="status-label">Текущая эмоция:</span>
+              <div id="activeEmotionBadge" class="emotion-badge badge-neutral">
+                <span class="emotion-dot"></span>
+                <span id="emotionLabelText">neutral (спокойствие)</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Панель быстрого теста эмоций (демонстрация спрайтов) -->
+        <div class="emotion-preview-bar">
+          <span class="preview-title">Тест мимики:</span>
+          <div class="preview-chips">
+            <button class="chip" data-emotion="neutral">neutral</button>
+            <button class="chip" data-emotion="joy">joy</button>
+            <button class="chip" data-emotion="sadness">sadness</button>
+            <button class="chip" data-emotion="anger">anger</button>
+            <button class="chip" data-emotion="fear">fear</button>
+            <button class="chip" data-emotion="disgust">disgust</button>
+            <button class="chip" data-emotion="surprise">surprise</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ПРАВАЯ ЗОНА: Панель диалога визуальной новеллы -->
+      <section class="dialogue-pane">
+        <!-- Баннер уведомлений / ошибок -->
+        <div id="alertBanner" class="alert-banner hidden">
+          <span id="alertMessage" class="alert-text"></span>
+          <button id="btnCloseAlert" class="btn-close-alert">×</button>
+        </div>
+
+        <!-- Лента сообщений -->
+        <div id="chatFeed" class="chat-feed">
+          <div class="message-bubble system-note">
+            <span>🎭 Начало диалога. Задайте Мире вопрос или поделитесь новостью.</span>
+          </div>
+        </div>
+
+        <!-- Индикатор «Мира думает...» -->
+        <div id="thinkingIndicator" class="thinking-row hidden">
+          <div class="thinking-avatar">🎨</div>
+          <div class="thinking-bubble">
+            <span class="thinking-text">Мира думает</span>
+            <span class="dot-typing">
+              <span></span><span></span><span></span>
+            </span>
+          </div>
+        </div>
+
+        <!-- Область ввода -->
+        <form id="chatForm" class="input-panel">
+          <textarea id="messageInput" class="input-field" placeholder="Напишите реплику Мире (Enter — отправить, Shift+Enter — перенос)..." rows="2"></textarea>
+          <button id="btnSend" type="submit" class="btn btn-primary" title="Отправить реплику">
+            <span>Отправить</span>
+            <span class="send-arrow">➔</span>
+          </button>
+        </form>
+      </section>
+    </main>
+
+    <!-- Модальное окно настроек API -->
+    <div id="settingsModal" class="modal hidden">
+      <div class="modal-backdrop"></div>
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>Настройки подключения</h3>
+          <button id="btnCloseSettings" class="btn-close-modal">×</button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="settingBaseUrl">Base URL API (OpenAI-совместимый):</label>
+            <input type="text" id="settingBaseUrl" class="form-input" value="http://localhost:11434/v1">
+            <small>По умолчанию: <code>http://localhost:11434/v1</code> (Ollama) или <code>https://openrouter.ai/api/v1</code></small>
+          </div>
+          <div class="form-group">
+            <label for="settingModel">Модель (Model ID):</label>
+            <input type="text" id="settingModel" class="form-input" value="qwen2.5:3b">
+            <small>Рекомендуется: <code>qwen2.5:3b</code>, <code>llama3.2:3b</code> или <code>qwen/qwen-2.5-7b-instruct</code></small>
+          </div>
+          <div class="form-group">
+            <label for="settingApiKey">API Key:</label>
+            <input type="password" id="settingApiKey" class="form-input" value="ollama">
+            <small>Для локальной Ollama подойдёт любое слово (например, <code>ollama</code>)</small>
+          </div>
+          <div class="form-group-checkbox">
+            <label class="checkbox-label">
+              <input type="checkbox" id="settingSimulationMode">
+              <span>Автономный демо-режим (эмуляция ответов Миры без запущенной Ollama)</span>
+            </label>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button id="btnSaveSettings" class="btn btn-primary">Сохранить</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
