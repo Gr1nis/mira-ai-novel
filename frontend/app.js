@@ -26,6 +26,24 @@ document.addEventListener("DOMContentLoaded", () => {
   const inputApiKey = document.getElementById("settingApiKey");
   const checkSimMode = document.getElementById("settingSimulationMode");
 
+  // Восстановление настроек из LocalStorage
+  const savedBaseUrl = localStorage.getItem("mira_base_url");
+  const savedModel = localStorage.getItem("mira_model");
+  const savedApiKey = localStorage.getItem("mira_api_key");
+  const savedSimMode = localStorage.getItem("mira_sim_mode");
+
+  if (savedBaseUrl) inputBaseUrl.value = savedBaseUrl;
+  if (savedModel) inputModel.value = savedModel;
+  if (savedApiKey) inputApiKey.value = savedApiKey;
+  if (savedSimMode !== null) checkSimMode.checked = (savedSimMode === "true");
+
+  function saveSettingsToStorage() {
+    localStorage.setItem("mira_base_url", inputBaseUrl.value.trim());
+    localStorage.setItem("mira_model", inputModel.value.trim());
+    localStorage.setItem("mira_api_key", inputApiKey.value.trim());
+    localStorage.setItem("mira_sim_mode", checkSimMode.checked);
+  }
+
   // Состояние
   let history = [];
   let currentEmotion = "neutral";
@@ -225,6 +243,9 @@ document.addEventListener("DOMContentLoaded", () => {
   // Модалка настроек
   btnSettings.addEventListener("click", () => settingsModal.classList.remove("hidden"));
   btnCloseSettings.addEventListener("click", () => settingsModal.classList.add("hidden"));
-  btnSaveSettings.addEventListener("click", () => settingsModal.classList.add("hidden"));
+  btnSaveSettings.addEventListener("click", () => {
+    saveSettingsToStorage();
+    settingsModal.classList.add("hidden");
+  });
   settingsModal.querySelector(".modal-backdrop").addEventListener("click", () => settingsModal.classList.add("hidden"));
 });
