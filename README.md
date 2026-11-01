@@ -3,6 +3,9 @@
 Интерактивная визуальная новелла с эмоциональным ИИ-персонажем по модели Пола Экмана.  
 Проект выполнен в соответствии с методическими указаниями практического задания (Продвинутый уровень, Вариант А: FastAPI + Web UI) на 100 из 100 баллов.
 
+🌐 **Онлайн-версия (GitHub Pages)**: [https://gr1nis.github.io/mira-ai-novel/](https://gr1nis.github.io/mira-ai-novel/)  
+📦 **Репозиторий проекта**: [https://github.com/Gr1nis/mira-ai-novel](https://github.com/Gr1nis/mira-ai-novel)
+
 ---
 
 ## 🌟 Ключевые возможности
